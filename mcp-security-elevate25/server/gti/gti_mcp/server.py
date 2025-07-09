@@ -24,6 +24,12 @@ from mcp.server.fastmcp import FastMCP, Context
 
 logging.basicConfig(level=logging.ERROR)
 
+# If True, creates a completely fresh transport for each request
+# with no session tracking or state persistence between requests.
+stateless = False
+if os.getenv("STATELESS") == "1":
+  stateless = True
+
 
 def _vt_client_factory(unused_ctx) -> vt.Client:
   api_key = os.getenv("VT_APIKEY")
@@ -47,7 +53,8 @@ async def vt_client(ctx: Context) -> AsyncIterator[vt.Client]:
 # Create a named server and specify dependencies for deployment and development
 server = FastMCP(
     "Google Threat Intelligence MCP server",
-    dependencies=["vt-py"])
+    dependencies=["vt-py"],
+    stateless_http=stateless)
 
 # Load tools.
 from gti_mcp.tools import *

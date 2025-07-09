@@ -5,7 +5,8 @@
 This repository contains the code and configurations used for Elevate 2025. It covers detection-as-code, threat intelligence, and MCP set up.
 
 - all MCP servers were cloned and treated as standalone folders within the repo for simplicity
-  - ai-runbooks-elevate25 and mcp-security-elevate25 are cloned as of 6 June 2025 to keep the information frozen for simplicity sake. 
+  - ai-runbooks-elevate25 are cloned as of 6 June 2025 
+  - mcp-security-elevate25 updated on 10 July 2025
     - ai-runbooks-elevate25 was cloned from https://github.com/dandye/ai-runbooks
     - mcp-security-elevate25 was clone from https://github.com/google/mcp-security
   - opencti-mcp and github-mcp-server are cloned as of 28 May 2025 to keep the information frozen for simplicity sake
