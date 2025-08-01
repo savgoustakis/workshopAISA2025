@@ -48,4 +48,13 @@ For each hypothesis, provide a list of data sources that we can use to test the 
 
 * Understanding reports, and pulling IOCs and any rules
 > You are a threat hunter. Based on this report <insert link>, summarise the report for a threat intelligence analyst. Please output the following: - any ttps/behaviours in the report - any indicators / iocs in the report in a table format. 
-"""If there are any rules such as YARA rules, automatically push them to my Livehunt rule on GTI""" pending
+"""If there are any rules such as YARA rules, automatically push them to my Livehunt rule on GTI""" 
+
+## Vulnerabilities
+
+'''
+Tell me about the cve-2025-31324 vulnerability. Include the CVE number, CVSS score, and a summary of the vulnerability. Explain in point form, who has been observed exploiting this vulnerability, why this vulnerability is critical, and the risk associated with it. 
+ - Provide recommendations on what I need to do to remediate this vulnerability. 
+- Check if I have any open cases or alerts based on the file hashes in the report. 
+- Structure the response for a CISO
+```
