@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * GTI Hunting MCP Server - Production Version
+ * GTI Hunting MCP Server - Enhanced Version with Private URL Scanning
  * 
  * A Model Context Protocol server for VirusTotal API integration
- * Supports: Livehunt rulesets and IOC Collections
+ * Supports: Livehunt rulesets, IOC Collections, and Private URL Scanning
  * 
  * Usage: GTI_APIKEY="your-key" node server.js
  */
@@ -76,6 +76,32 @@ class GTIHuntingMCPServer {
           },
           required: ["name"]
         }
+      },
+      {
+        name: "scan_private_url",
+        description: "Submit a URL for private scanning and automatically retrieve the complete analysis report. This includes detection results, network information, and related artifacts.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            url: {
+              type: "string",
+              description: "The URL to scan (e.g., 'https://example.com/suspicious-page')"
+            },
+            include_relationships: {
+              type: "boolean",
+              description: "Whether to include additional relationship data (IP addresses, network location, downloaded files)",
+              default: true
+            },
+            max_wait_time: {
+              type: "number",
+              description: "Maximum time to wait for scan completion in seconds (default: 300, max: 600)",
+              default: 300,
+              minimum: 30,
+              maximum: 600
+            }
+          },
+          required: ["url"]
+        }
       }
     ];
     
@@ -134,7 +160,7 @@ class GTIHuntingMCPServer {
       capabilities: { tools: {} },
       serverInfo: {
         name: "gti-hunting-mcp-server",
-        version: "1.0.0"
+        version: "1.1.0"
       }
     }, id);
   }
@@ -154,6 +180,9 @@ class GTIHuntingMCPServer {
           break;
         case 'create_collection':
           result = await this.createCollection(args);
+          break;
+        case 'scan_private_url':
+          result = await this.scanPrivateUrl(args);
           break;
         default:
           this.sendError(-32602, `Unknown tool: ${name}`, id);
@@ -253,7 +282,180 @@ class GTIHuntingMCPServer {
     return this.makeRequest('/api/v3/collections', 'POST', postData);
   }
 
-  makeRequest(path, method, postData = null) {
+  async scanPrivateUrl(args) {
+    const { url, include_relationships = true, max_wait_time = 300 } = args;
+    
+    try {
+      // Step 1: Submit URL for scanning
+      const submitResult = await this.submitUrlForScanning(url);
+      if (!submitResult.success) {
+        return submitResult;
+      }
+      
+      const analysisId = submitResult.data.data.id;
+      
+      // Step 2: Wait for analysis to complete
+      const analysisResult = await this.waitForAnalysisCompletion(analysisId, max_wait_time);
+      if (!analysisResult.success) {
+        return analysisResult;
+      }
+      
+      // Step 3: Get the detailed scan report (use the URL ID from meta, not analysis ID)
+      const urlId = analysisResult.data.meta?.url_info?.id;
+      if (!urlId) {
+        return {
+          success: false,
+          statusCode: 500,
+          error: {
+            code: "MissingUrlIdError",
+            message: "Could not extract URL ID from analysis response"
+          }
+        };
+      }
+      
+      const reportResult = await this.getPrivateUrlReport(urlId);
+      if (!reportResult.success) {
+        return reportResult;
+      }
+      
+      // Step 4: Optionally get relationship data
+      let relationshipData = {};
+      if (include_relationships) {
+        relationshipData = await this.getUrlRelationships(urlId);
+      }
+      
+      // Combine all results
+      const combinedResult = {
+        scan_summary: {
+          url: url,
+          analysis_id: analysisId,
+          url_id: urlId,
+          scan_date: analysisResult.data.data.attributes.date,
+          status: analysisResult.data.data.attributes.status,
+          sandbox_status: analysisResult.data.data.attributes.sandbox_status || {}
+        },
+        url_info: {
+          original_url: reportResult.data.data.attributes.url,
+          final_url: reportResult.data.data.attributes.last_final_url,
+          title: reportResult.data.data.attributes.title,
+          last_http_response_code: reportResult.data.data.attributes.last_http_response_code,
+          redirection_chain: reportResult.data.data.attributes.redirection_chain || [],
+          tld: reportResult.data.data.attributes.tld
+        },
+        gti_assessment: reportResult.data.data.attributes.gti_assessment || {},
+        security_info: {
+          tags: reportResult.data.data.attributes.tags || [],
+          trackers: Object.keys(reportResult.data.data.attributes.trackers || {}).length,
+          tracker_details: reportResult.data.data.attributes.trackers || {},
+          outgoing_links_count: (reportResult.data.data.attributes.outgoing_links || []).length
+        },
+        technical_details: {
+          favicon: reportResult.data.data.attributes.favicon,
+          html_meta: reportResult.data.data.attributes.html_meta,
+          last_http_response_headers: reportResult.data.data.attributes.last_http_response_headers,
+          last_http_response_content_length: reportResult.data.data.attributes.last_http_response_content_length,
+          last_http_response_content_sha256: reportResult.data.data.attributes.last_http_response_content_sha256
+        },
+        relationships: relationshipData
+      };
+      
+      return {
+        success: true,
+        statusCode: 200,
+        data: combinedResult,
+        error: null
+      };
+      
+    } catch (error) {
+      return {
+        success: false,
+        statusCode: 500,
+        error: {
+          code: "ScanProcessError",
+          message: `Failed to complete URL scan process: ${error.message}`
+        }
+      };
+    }
+  }
+
+  async submitUrlForScanning(url) {
+    // Use form-encoded data instead of JSON as shown in the sample
+    const postData = `url=${encodeURIComponent(url)}`;
+    return this.makeRequest('/api/v3/private/urls', 'POST', postData, 'application/x-www-form-urlencoded');
+  }
+
+  async waitForAnalysisCompletion(analysisId, maxWaitTime) {
+    const startTime = Date.now();
+    const checkInterval = 5000; // Check every 5 seconds
+    
+    while (Date.now() - startTime < maxWaitTime * 1000) {
+      const result = await this.makeRequest(`/api/v3/private/analyses/${analysisId}`, 'GET');
+      
+      if (!result.success) {
+        return result;
+      }
+      
+      const status = result.data.data.attributes.status;
+      
+      if (status === 'finished') {
+        return result;
+      }
+      
+      if (status === 'error' || status === 'corrupted file' || status === 'unsupported file type' || status === 'timeout' || status === 'startup error') {
+        return {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: "AnalysisFailedError",
+            message: `Analysis failed with status: ${status}`
+          }
+        };
+      }
+      
+      // Wait before next check
+      await this.sleep(checkInterval);
+    }
+    
+    // Timeout reached
+    return {
+      success: false,
+      statusCode: 408,
+      error: {
+        code: "AnalysisTimeoutError",
+        message: `Analysis did not complete within ${maxWaitTime} seconds`
+      }
+    };
+  }
+
+  async getPrivateUrlReport(analysisId) {
+    return this.makeRequest(`/api/v3/private/urls/${analysisId}`, 'GET');
+  }
+
+  async getUrlRelationships(analysisId) {
+    const relationships = ['last_serving_ip_address', 'network_location', 'downloaded_files'];
+    const relationshipData = {};
+    
+    for (const relationship of relationships) {
+      try {
+        const result = await this.makeRequest(`/api/v3/private/urls/${analysisId}/${relationship}`, 'GET');
+        if (result.success) {
+          relationshipData[relationship] = result.data;
+        } else {
+          relationshipData[relationship] = { error: `Failed to fetch ${relationship}` };
+        }
+      } catch (error) {
+        relationshipData[relationship] = { error: error.message };
+      }
+    }
+    
+    return relationshipData;
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  makeRequest(path, method, postData = null, contentType = 'application/json') {
     return new Promise((resolve, reject) => {
       const options = {
         hostname: 'www.virustotal.com',
@@ -262,7 +464,7 @@ class GTIHuntingMCPServer {
         method: method,
         headers: {
           'x-apikey': this.apiKey,
-          'Content-Type': 'application/json'
+          'Content-Type': contentType
         }
       };
       
