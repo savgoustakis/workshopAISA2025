@@ -9,6 +9,7 @@ A Model Context Protocol (MCP) server that provides integration with Google Thre
 - **GTI Integration**: 
   - Create hunting rulesets in Livehunt with YARA rules
   - Create IOC collections with domains, URLs, IP addresses, and file hashes
+  - Added Private Scanning for URLs
 
 ## Prerequisites
 
