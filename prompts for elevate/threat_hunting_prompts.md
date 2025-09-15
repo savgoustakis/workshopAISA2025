@@ -65,6 +65,14 @@ You are a threat hunter. Based on this report <insert link>, summarise the repor
 If there are any rules such as YARA rules, automatically push them to my Livehunt rule on GTI 
 ```
 
+* Ransomware Victims / Affliates Profile
+```
+Analyse Akira Ransomware Victims and Tactics.
+
+# Follow up prompt if need be
+Based on what was provided, provide some threat hunting hypotheses.
+```
+
 ## Vulnerabilities
 
 * Understanding specific vulnerabilities
