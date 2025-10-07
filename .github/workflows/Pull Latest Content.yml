@@ -40,6 +40,20 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      
+      - name: Debug OIDC Claims (Temporary)
+        run: |
+          # Get the token value
+          TOKEN=$(ACTIONS_ID_TOKEN_REQUEST_URL="${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}" \
+            ACTIONS_ID_TOKEN_REQUEST_TOKEN="${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}" \
+            curl -fsS "${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}" \
+            -H "Authorization: Bearer ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}" | jq -r .value)
+
+          # Decode the claims payload
+          echo "--- Decoded Claims Payload ---"
+          echo $TOKEN | awk -F'.' '{print $2}' | base64 -d 
+          echo "------------------------------"
+        shell: bash    
       - uses: google-github-actions/auth@v2
         with:
           project_id: ${{ vars.GOOGLE_CLOUD_PROJECT_ID }}
