@@ -8,7 +8,7 @@ set -e
 # --- CONFIGURATION ---
 # URL to the raw JSON file containing the workshop variables.
 # As the host, you must provide this file.
-VARIABLES_URL="https://raw.githubusercontent.com/SumitsWorkshopOrg/workshop-assets/main/variables.json"
+VARIABLES_URL="https://raw.githubusercontent.com/SumitsWorkshopOrg/workshop/refs/heads/main/variables.json"
 # --- END CONFIGURATION ---
 
 echo "🚀 Starting workshop repository setup..."
