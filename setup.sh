@@ -1,51 +1,62 @@
 #!/bin/bash
-set -e # Exit immediately if a command fails
+#
+# Setup script for the workshop repository.
+# This script configures all necessary GitHub Actions variables for the attendee.
+#
+set -e
 
-# --- CONFIGURATION: Change these values before running ---
-SOURCE_REPO="labuser2-cmyk/workshop"
-TARGET_ORG="SumitsWorkshopOrg"
-NEW_REPO_NAME="workshop-template" # Name for the new repo to be created
-TAG_VERSION="v1.0"                 # The Git tag to create for this version
-# --- END OF CONFIGURATION ---
+# --- CONFIGURATION ---
+# URL to the raw JSON file containing the workshop variables.
+# As the host, you must provide this file.
+VARIABLES_URL="https://raw.githubusercontent.com/SumitsWorkshopOrg/workshop-assets/main/variables.json"
+# --- END CONFIGURATION ---
 
-# The full name of the new repository
-TARGET_REPO="${TARGET_ORG}/${NEW_REPO_NAME}"
+echo "🚀 Starting workshop repository setup..."
+echo ""
 
-echo "### Step 1: Creating new repository ${TARGET_REPO} on GitHub..."
-gh repo create "${TARGET_REPO}" --public --description "Cloned from ${SOURCE_REPO}"
+# --- Step 1: Check for Prerequisites ---
+echo "🔎 Checking for required tools (gh and jq)..."
+if ! command -v gh &> /dev/null; then
+    echo "❌ Error: GitHub CLI ('gh') is not installed. Please install it to continue."
+    echo "Installation instructions: https://github.com/cli/cli#installation"
+    exit 1
+fi
 
-echo "### Step 2: Cloning the source repository locally..."
-# The repository name is the part after the '/'
-SOURCE_REPO_DIR=$(basename "$SOURCE_REPO") 
-git clone "https://github.com/${SOURCE_REPO}.git"
-cd "${SOURCE_REPO_DIR}"
+if ! command -v jq &> /dev/null; then
+    echo "❌ Error: 'jq' is not installed. Please install it to continue."
+    echo "On Debian/Ubuntu, run: sudo apt-get update && sudo apt-get install jq -y"
+    exit 1
+fi
+echo "✅ All tools are present."
+echo ""
 
-echo "### Step 3: Pushing the code to the new repository..."
-git remote set-url origin "https://github.com/${TARGET_REPO}.git"
-git push --all
-git push --tags
+# --- Step 2: Check GitHub Authentication ---
+echo "🔐 Checking GitHub authentication..."
+gh auth status > /dev/null || (echo "   - You are not logged into GitHub. Running 'gh auth login'..." && gh auth login)
+echo "✅ Authenticated to GitHub as '$(gh auth status -h github.com -u)'."
+echo ""
 
-echo "### Step 4: Tagging the initial workshop version as ${TAG_VERSION}..."
-git tag -a "$TAG_VERSION" -m "Initial version for workshop: ${TAG_VERSION}"
-git push origin "$TAG_VERSION"
+# --- Step 3: Identify Target Repository ---
+TARGET_REPO=$(gh repo view --json owner,name --jq '.owner.login + "/" + .name')
+if [ -z "$TARGET_REPO" ]; then
+    echo "❌ Error: Could not determine the current GitHub repository."
+    echo "Please make sure you are running this script from the root of your cloned workshop repository."
+    exit 1
+fi
+echo "🎯 Configuring repository: $TARGET_REPO"
+echo ""
 
-echo "### Step 5: Copying variables from ${SOURCE_REPO} to ${TARGET_REPO}..."
-gh variable list --repo "$SOURCE_REPO" --json name,value | \
-jq -c '.[]' | \
-while read -r variable_json; do
-  # Extract the name and value of each variable
-  VAR_NAME=$(echo "$variable_json" | jq -r '.name')
-  VAR_VALUE=$(echo "$variable_json" | jq -r '.value')
+# --- Step 4: Set Variables from Remote JSON ---
+echo "⚙️ Setting up repository variables..."
 
-  echo "Setting variable: '${VAR_NAME}' in ${TARGET_REPO}..."
-
-  # Set the variable on the target repository
-  gh variable set "$VAR_NAME" --body "$VAR_VALUE" --repo "${TARGET_REPO}"
+# Download the variables and loop through them
+curl -sSL "$VARIABLES_URL" | jq -c '.[]' | while read -r var_json; do
+  VAR_NAME=$(echo "$var_json" | jq -r '.name')
+  VAR_VALUE=$(echo "$var_json" | jq -r '.value')
+  echo "   - Setting variable: ${VAR_NAME}"
+  gh variable set "$VAR_NAME" --body "$VAR_VALUE" --repo "$TARGET_REPO"
 done
+echo "✅ Repository variables are set."
+echo ""
 
-echo "### Step 6: Cleaning up local clone..."
-cd ..
-rm -rf "${SOURCE_REPO_DIR}"
-
-echo "✅ All done! New repository created and tagged. You can view it at:"
-echo "https://github.com/${TARGET_REPO}/releases/tag/${TAG_VERSION}"
+echo "🎉 Workshop setup is complete!"
