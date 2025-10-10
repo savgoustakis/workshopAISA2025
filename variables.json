@@ -1,0 +1,30 @@
+[
+  {
+    "name": "GOOGLE_CLOUD_PROJECT_ID",
+    "value": "patesumi"
+  },
+  {
+    "name": "GOOGLE_SECOPS_INSTANCE",
+    "value": "projects/patesumi/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db"
+  },
+  {
+    "name": "LOGGING_LEVEL",
+    "value": "INFO"
+  },
+  {
+    "name": "AUTHORIZATION_SCOPES",
+    "value": "{\"GOOGLE_SECOPS_API\":[\"https://www.googleapis.com/auth/cloud-platform\"]}"
+  },
+  {
+    "name": "GOOGLE_SECOPS_API_BASE_URL",
+    "value": "https://us-chronicle.googleapis.com/v1alpha"
+  },
+  {
+    "name": "GOOGLE_SECOPS_API_UPLOAD_BASE_URL",
+    "value": "https://us-chronicle.googleapis.com/upload/v1alpha"
+  },
+  {
+    "name": "GOOGLE_CLOUD_WORKLOAD_IDENTITY_PROVIDER",
+    "value": "projects/484332941014/locations/global/workloadIdentityPools/github-actions/providers/github"
+  }
+]
