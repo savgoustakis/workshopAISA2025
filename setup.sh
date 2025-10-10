@@ -33,7 +33,7 @@ echo ""
 # --- Step 2: Check GitHub Authentication ---
 echo "🔐 Checking GitHub authentication..."
 gh auth status > /dev/null || (echo "   - You are not logged into GitHub. Running 'gh auth login'..." && gh auth login)
-echo "✅ Authenticated to GitHub as '$(gh auth status -h github.com -u)'."
+echo "✅ Authenticated to GitHub as '$(gh api user -q .login)'."
 echo ""
 
 # --- Step 3: Identify Target Repository ---
