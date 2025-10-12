@@ -1954,3 +1954,6 @@ wmic_ntds_dit_T1003_003_cisa_report:
   revision_id: v_1758264123_333823000
   run_frequency: LIVE
   type: SINGLE_EVENT
+new_rule_savgoust01:
+  alerting: false
+  enabled: true
