@@ -1152,7 +1152,7 @@ network_traffic_to_specific_country:
   type: SINGLE_EVENT
 new_rule5:
   alerting: false
-  archive_time: '2025-10-12T11:49:44.785678Z'
+  archive_time: '2025-10-12T20:42:42.730012Z'
   archived: true
   create_time: '2025-10-10T11:03:16.728367Z'
   enabled: false
@@ -1160,6 +1160,18 @@ new_rule5:
   resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_15e488fa-084a-4f44-aa8a-33af577dc337
   revision_create_time: '2025-10-10T11:03:16.728367Z'
   revision_id: v_1760094196_728367000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
+new_rule_savgoust01:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-10-12T20:42:41.030047Z'
+  enabled: true
+  id: ru_c90f20ba-73cf-4b6d-b633-d32718231b57
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_c90f20ba-73cf-4b6d-b633-d32718231b57
+  revision_create_time: '2025-10-12T20:42:41.030047Z'
+  revision_id: v_1760301761_030047000
   run_frequency: LIVE
   type: SINGLE_EVENT
 non_prod_arg_unc3944_cli_13:
@@ -1954,6 +1966,3 @@ wmic_ntds_dit_T1003_003_cisa_report:
   revision_id: v_1758264123_333823000
   run_frequency: LIVE
   type: SINGLE_EVENT
-new_rule_savgoust01:
-  alerting: false
-  enabled: true
