@@ -1,4 +1,4 @@
-rule new_rule5 {
+rule new_rule_savgoust01 {
 
   meta:
     author = "Google Cloud Security"
