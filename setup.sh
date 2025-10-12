@@ -31,8 +31,8 @@ echo "✅ All tools are present."
 echo ""
 
 # --- Step 2: Check GitHub Authentication ---
-echo "🔐 Checking GitHub authentication..."
-gh auth status > /dev/null || (echo "   - You are not logged into GitHub. Running 'gh auth login'..." && gh auth login)
+echo "🔐 GitHub authentication..."
+gh auth login
 echo "✅ Authenticated to GitHub as '$(gh api user -q .login)'."
 echo ""
 
