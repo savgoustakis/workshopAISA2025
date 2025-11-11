@@ -1,0 +1,18 @@
+
+rule Rogue_RDP_File_UNC5837 {
+  meta:
+    author = "Gemini"
+    description = "Detects the creation or modification of .rdp files, which could be used in UNC5837 phishing campaigns."
+    threat_actor = "UNC5837"
+    reference = "https://cloud.google.com/blog/topics/threat-intelligence/windows-rogue-remote-desktop-protocol"
+
+  events:
+    (
+      $rdp.metadata.event_type = "FILE_CREATION" or
+      $rdp.metadata.event_type = "FILE_MODIFICATION"
+    ) and
+    re.regex($rdp.target.file.full_path, `.*\.rdp$`)
+
+  condition:
+    $rdp
+}

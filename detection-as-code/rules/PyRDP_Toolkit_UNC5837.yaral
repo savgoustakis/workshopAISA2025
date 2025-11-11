@@ -1,0 +1,18 @@
+
+rule PyRDP_Toolkit_UNC5837 {
+  meta:
+    author = "Gemini"
+    description = "Detects the execution of the PyRDP toolkit, which can be used by UNC5837 for malicious RDP sessions."
+    threat_actor = "UNC5837"
+    reference = "https://cloud.google.com/blog/topics/threat-intelligence/windows-rogue-remote-desktop-protocol"
+
+  events:
+    $pyrdp.metadata.event_type = "PROCESS_LAUNCH" and
+    (
+      re.regex($pyrdp.principal.process.command_line, `.*pyrdp.*`) or
+      re.regex($pyrdp.principal.process.file.full_path, `.*pyrdp.*`)
+    )
+
+  condition:
+    $pyrdp
+}

@@ -1,0 +1,20 @@
+
+rule Suspicious_RDP_Event_Log_UNC5837 {
+  meta:
+    author = "Gemini"
+    description = "Detects suspicious Windows Event Log activity related to RDP sessions, potentially indicating UNC5837 activity."
+    threat_actor = "UNC5837"
+    reference = "https://cloud.google.com/blog/topics/threat-intelligence/windows-rogue-remote-desktop-protocol"
+
+  events:
+    (
+      $event.metadata.product_event_type = "1102" or // Audit log cleared
+      $event.metadata.product_event_type = "1027" or // RDP session reconnected
+      $event.metadata.product_event_type = "1029"    // RDP session ended
+    ) and
+    $event.metadata.vendor_name = "Microsoft" and
+    $event.metadata.product_name = "Microsoft-Windows-Eventlog"
+
+  condition:
+    $event
+}

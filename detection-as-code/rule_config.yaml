@@ -1,3 +1,39 @@
+PyRDP_Toolkit_UNC5837:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-11T23:05:04.804367Z'
+  enabled: false
+  id: ru_121fe731-1303-4f1b-a77d-1b117649ae25
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_121fe731-1303-4f1b-a77d-1b117649ae25
+  revision_create_time: '2025-11-11T23:05:04.804367Z'
+  revision_id: v_1762902304_804367000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
+Rogue_RDP_File_UNC5837:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-11T23:05:03.094895Z'
+  enabled: false
+  id: ru_31bfd596-0da3-4d52-a9de-44f52eb55bd4
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_31bfd596-0da3-4d52-a9de-44f52eb55bd4
+  revision_create_time: '2025-11-11T23:05:03.094895Z'
+  revision_id: v_1762902303_094895000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
+Suspicious_RDP_Event_Log_UNC5837:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-11T23:05:06.438751Z'
+  enabled: false
+  id: ru_6385bd4d-e806-4024-8d30-5961cbeba9e9
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_6385bd4d-e806-4024-8d30-5961cbeba9e9
+  revision_create_time: '2025-11-11T23:05:06.438751Z'
+  revision_id: v_1762902306_438751000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
 adfs_db_suspicious_named_pipe_connection:
   alerting: true
   archive_time: null
