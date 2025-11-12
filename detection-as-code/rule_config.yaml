@@ -646,6 +646,18 @@ aws_user_creates_permenant_access_key:
   revision_id: v_1758264137_925231000
   run_frequency: LIVE
   type: SINGLE_EVENT
+credential_dumping_via_ntdsutil:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-12T00:13:24.032223Z'
+  enabled: false
+  id: ru_1d29f22d-7e1b-4023-bcb4-3323185c0738
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_1d29f22d-7e1b-4023-bcb4-3323185c0738
+  revision_create_time: '2025-11-12T00:13:24.032223Z'
+  revision_id: v_1762906404_032223000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
 demoverse_Chrome_Browser_Alert_SideLoaded_Extensions:
   alerting: true
   archive_time: null
