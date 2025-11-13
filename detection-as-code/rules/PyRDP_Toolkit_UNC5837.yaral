@@ -3,7 +3,11 @@ rule PyRDP_Toolkit_UNC5837 {
   meta:
     author = "Gemini"
     description = "Detects the execution of the PyRDP toolkit, which can be used by UNC5837 for malicious RDP sessions."
+    rule_id = "mr_a1b2c3d4-e5f6-7890-1234-567890abcdef"
+    rule_name = "PyRDP_Toolkit_UNC5837"
     threat_actor = "UNC5837"
+    tactic = "TA0008"
+    technique = "T1021.001"
     reference = "https://cloud.google.com/blog/topics/threat-intelligence/windows-rogue-remote-desktop-protocol"
 
   events:

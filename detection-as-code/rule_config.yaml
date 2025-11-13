@@ -6,8 +6,8 @@ PyRDP_Toolkit_UNC5837:
   enabled: false
   id: ru_121fe731-1303-4f1b-a77d-1b117649ae25
   resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_121fe731-1303-4f1b-a77d-1b117649ae25
-  revision_create_time: '2025-11-11T23:05:04.804367Z'
-  revision_id: v_1762902304_804367000
+  revision_create_time: '2025-11-13T06:11:57.509663Z'
+  revision_id: v_1763014317_509663000
   run_frequency: LIVE
   type: SINGLE_EVENT
 Rogue_RDP_File_UNC5837:
