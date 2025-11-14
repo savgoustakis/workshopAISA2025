@@ -1,3 +1,39 @@
+Airstalk_File_Creation:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-14T01:22:52.949055Z'
+  enabled: false
+  id: ru_1e3eae8b-8f20-4d88-94e0-24f89f36ca49
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_1e3eae8b-8f20-4d88-94e0-24f89f36ca49
+  revision_create_time: '2025-11-14T01:22:52.949055Z'
+  revision_id: v_1763083372_949055000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
+Airstalk_PowerShell_Activity:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-14T01:23:20.644479Z'
+  enabled: false
+  id: ru_2d1f16c8-6445-46f3-be91-ef5f0b48277a
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_2d1f16c8-6445-46f3-be91-ef5f0b48277a
+  revision_create_time: '2025-11-14T01:23:20.644479Z'
+  revision_id: v_1763083400_644479000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
+PROMPTFLUX_LOG_FILE_CREATION:
+  alerting: true
+  archive_time: null
+  archived: false
+  create_time: '2025-11-14T07:44:40.496815Z'
+  enabled: true
+  id: ru_27aef9c1-6571-4c91-b40d-94bc15c8936a
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_27aef9c1-6571-4c91-b40d-94bc15c8936a
+  revision_create_time: '2025-11-14T07:44:40.496815Z'
+  revision_id: v_1763106280_496815000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
 PyRDP_Toolkit_UNC5837:
   alerting: false
   archive_time: null
@@ -42,8 +78,8 @@ adfs_db_suspicious_named_pipe_connection:
   enabled: true
   id: ru_00cec6a3-d256-4fbe-8a89-5d86b5ba6a73
   resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_00cec6a3-d256-4fbe-8a89-5d86b5ba6a73
-  revision_create_time: '2025-09-19T06:42:10.503407Z'
-  revision_id: v_1758264130_503407000
+  revision_create_time: '2025-11-14T07:08:01.702575Z'
+  revision_id: v_1763104081_702575000
   run_frequency: LIVE
   type: SINGLE_EVENT
 ag_ioc_sha256_hash_vt_basic:

@@ -1,0 +1,28 @@
+rule Airstalk_PowerShell_Activity {
+  meta:
+    author = "Gemini"
+    description = "Detects PowerShell commands used by the Airstalk malware for data exfiltration."
+    threat_name = "Airstalk"
+    reference = "https://unit42.paloaltonetworks.com/new-windows-based-malware-family-airstalk/"
+    version = "1.2" // Incrementing version due to correction
+    mitre_attack_tactic = "TA0002"
+    mitre_attack_technique = "T1059.001"
+
+  events:
+    $ps.metadata.event_type = "PROCESS_LAUNCH"
+    and
+    (
+      $ps.principal.process.command_line = /[Cc][Oo][Pp][Yy]-[Ii][Tt][Ee][Mm]/ or
+      $ps.principal.process.command_line = /[Gg][Ee][Tt]-[Ii][Tt][Ee][Mm]/ or
+      $ps.principal.process.command_line = /[Ss][Ee][Ll][Ee][Cc][Tt]-[Ss][Tt][Rr][Ii][Nn][Gg]/ or
+      $ps.principal.process.command_line = /[Ii][Nn][Vv][Oo][Kk][Ee]-[Ww][Ee][Bb][Rr][Ee][Qq][Uu][Ee][Ss][Tt]/
+    )
+    and
+    (
+      $ps.principal.process.command_line = /AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cookies/ or
+      $ps.principal.process.command_line = /AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Cookies/
+    )
+
+  condition:
+    $ps
+}

@@ -1,0 +1,25 @@
+rule Airstalk_File_Creation {
+  meta:
+    author = "Gemini"
+    description = "Detects the creation of files associated with the Airstalk malware."
+    threat_name = "Airstalk"
+    reference = "https://unit42.paloaltonetworks.com/new-windows-based-malware-family-airstalk/"
+    version = "1.0"
+    mitre_attack_tactic = "TA0005"
+    mitre_attack_technique = "T1074.001"
+
+  events:
+    (
+      $file.metadata.event_type = "FILE_CREATION" or
+      $file.metadata.event_type = "FILE_MODIFICATION"
+    )
+    and
+    (
+      $file.target.file.full_path = /C:\\Users\\[^\\]+\\AppData\\Local\\Temp\\Temp\\sdelete\.exe/ or
+      $file.target.file.full_path = /C:\\Users\\[^\\]+\\AppData\\Local\\Temp\\Temp\\nircmd\.exe/ or
+      $file.target.file.full_path = /C:\\Users\\[^\\]+\\AppData\\Local\\Temp\\Temp\\EBWebView\\Default\\Cookies/
+    )
+
+  condition:
+    $file
+}

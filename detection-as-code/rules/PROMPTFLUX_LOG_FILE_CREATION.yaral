@@ -1,0 +1,45 @@
+/*
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+rule PROMPTFLUX_LOG_FILE_CREATION {
+  meta:
+    author = "Google Cloud Security"
+    description = "Detects the creation of a log file associated with the PROMPTFLUX malware, which uses AI for self-modification."
+    rule_id = "mr_c383c19a-6b3b-4e6b-8e7b-0f1e8a3a3a3a"
+    rule_name = "PROMPTFLUX Log File Creation"
+    severity = "High"
+    priority = "High"
+    platform = "Windows"
+    type = "alert"
+    data_source = "microsoft sysmon, microsoft windows events"
+    reference = "https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools"
+    tactic = "TA0005"
+    technique = "T1036"
+
+  events:
+    $e.metadata.event_type = "FILE_CREATION"
+    $e.target.file.full_path = /thinking_robot_log\.txt$/
+
+  outcome:
+    $risk_score = 85
+    $principal_hostname = array_distinct($e.principal.hostname)
+    $principal_process_command_line = array_distinct($e.principal.process.command_line)
+    $principal_process_file_sha256 = array_distinct($e.principal.process.file.sha256)
+    $principal_user_userid = array_distinct($e.principal.user.userid)
+    $target_file_full_path = array_distinct($e.target.file.full_path)
+
+  condition:
+    $e
+}
