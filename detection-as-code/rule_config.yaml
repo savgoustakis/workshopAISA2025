@@ -1198,6 +1198,18 @@ mitre_attack_T1570_suspicious_command_psexec:
   revision_id: v_1758264165_870911000
   run_frequency: LIVE
   type: SINGLE_EVENT
+mtrends_2025_unc5221_ivanti_exploit_cve_2024_21887:
+  alerting: false
+  archive_time: null
+  archived: false
+  create_time: '2025-11-16T02:32:28.265135Z'
+  enabled: true
+  id: ru_78369e5b-0198-4dbb-af1f-92f8ea02c25c
+  resource_name: projects/484332941014/locations/us/instances/35e17b64-994a-48c2-8404-c90d9f5471db/rules/ru_78369e5b-0198-4dbb-af1f-92f8ea02c25c
+  revision_create_time: '2025-11-16T02:32:28.265135Z'
+  revision_id: v_1763260348_265135000
+  run_frequency: LIVE
+  type: SINGLE_EVENT
 network_connection_first_seen_in_past_day:
   alerting: false
   archive_time: null
